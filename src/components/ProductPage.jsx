@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import calculateDiscountPercentage from './discountCalculator';
 
 function ProductPage() {
@@ -7,6 +7,29 @@ function ProductPage() {
   const discountPercentage = calculateDiscountPercentage(originalPrice, discountedPrice);
 
   const [isHovering, setIsHovering] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImageScaled, setIsImageScaled] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsImageScaled(false);
+    setTimeout(() => {
+      setIsModalOpen(false);
+    }, 500); // הזמן צריך להתאים לאורך האנימציה של ההקטנה
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      // Delay the scaling effect to allow the modal to render
+      const timer = setTimeout(() => {
+        setIsImageScaled(true);
+      }, 10);
+      return () => clearTimeout(timer);
+    }
+  }, [isModalOpen]);
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 py-8">
@@ -25,7 +48,10 @@ function ProductPage() {
               />
               {isHovering && (
                 <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center">
-                  <button className="text-white bg-gray-800 dark:bg-gray-600 rounded-full p-2 hover:bg-gray-700 dark:hover:bg-gray-500 transition duration-300 ease-in-out">
+                  <button
+                    className="text-white bg-gray-800 dark:bg-gray-600 rounded-full p-2 hover:bg-gray-700 dark:hover:bg-gray-500 transition duration-300 ease-in-out"
+                    onClick={handleOpenModal}
+                  >
                     View Full Image
                   </button>
                 </div>
@@ -81,6 +107,26 @@ function ProductPage() {
           </div>
         </div>
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+          <div
+            className={`relative transition-transform duration-500 ease-in-out ${isImageScaled ? 'scale-100' : 'scale-75'}`}
+          >
+            <button
+              className="absolute top-0 right-0 mt-4 mr-4 text-white bg-gray-800 dark:bg-gray-600 rounded-full p-2 hover:bg-gray-700 dark:hover:bg-gray-500 transition duration-300 ease-in-out"
+              onClick={handleCloseModal}
+            >
+              ✕
+            </button>
+            <img
+              className="max-w-full max-h-full"
+              src="./public/pictures/car.jpg"
+              alt="Product Image Full Screen"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
