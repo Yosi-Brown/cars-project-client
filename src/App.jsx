@@ -8,8 +8,9 @@ import {
 } from "react-router-dom";
 import ProductCard from "./components/ProductCard";
 import ProductPage from "./components/ProductPage";
-import './App.css'
-
+import ProductReviews from "./components/ProductReviews";
+import ProductsProvider from "./context/CartContextProduct.jsx";
+import './App.css';
 
 function Root() {
   return (
@@ -26,14 +27,16 @@ function App() {
       <Route path="/" element={<Root />}>
         <Route path="page" element={<ProductPage />} />
         <Route path="card" element={<ProductCard />} />
+        <Route path="reviews" element={<ProductReviews />} />
       </Route>
     )
   );
 
   return (
-    <div>
+    <ProductsProvider>
       <RouterProvider router={router} />
-    </div>
+    </ProductsProvider>
   );
 }
-export default App;
+
+export default App;

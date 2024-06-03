@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import calculateDiscountPercentage from './discountCalculator';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function ProductPage() {
+  const location = useLocation();
+  const { id } = location.state;
+
   const originalPrice = 90000;
   const discountedPrice = 60000;
   const discountPercentage = calculateDiscountPercentage(originalPrice, discountedPrice);
 
+  const [product, setProduct] = useState(false);
+  const [error, setError] = useState(null)
   const [isHovering, setIsHovering] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageScaled, setIsImageScaled] = useState(false);
@@ -22,6 +29,19 @@ function ProductPage() {
   };
 
   useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/products/get-product/${id}`);
+        setProduct(res.data.product);
+        console.log(res.data.product);
+      } catch (error) {
+        setError(error.message || 'An error occurred while fetching products.');
+        console.error(error);
+      }
+    };
+
+    getProduct();
+
     if (isModalOpen) {
       // Delay the scaling effect to allow the modal to render
       const timer = setTimeout(() => {
@@ -43,7 +63,7 @@ function ProductPage() {
             >
               <img
                 className="w-full h-full object-cover"
-                src="./public/pictures/car.jpg"
+                src= {product.image_link}
                 alt="Product Image"
               />
               {isHovering && (
@@ -63,14 +83,14 @@ function ProductPage() {
             </div>
           </div>
           <div className="md:flex-1 p-6 space-y-4">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Sample Company - Sample Model</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Sample Company - {product.model}</h1>
             <div className="text-gray-700 dark:text-gray-300 space-y-1">
-              <div><span className="font-bold">Engine Displacement (cc):</span> 2000</div>
-              <div><span className="font-bold">Horsepower:</span> 300</div>
-              <div><span className="font-bold">Seats:</span> 5</div>
-              <div><span className="font-bold">Engine Type:</span> V6</div>
-              <div><span className="font-bold">Car Type:</span> SUV</div>
-              <div><span className="font-bold">Year:</span> 2023</div>
+              <div><span className="font-bold">Engine Displacement (cc):</span> {product.engine_displacement_cc}</div>
+              <div><span className="font-bold">Horsepower:</span> {product.horsepower}</div>
+              <div><span className="font-bold">Seats:</span> {product.seats}</div>
+              <div><span className="font-bold">Engine Type:</span> {product.engine_type}</div>
+              <div><span className="font-bold">Car Type:</span> {product.car_type}</div>
+              <div><span className="font-bold">Year:</span> {product.year}</div>
               <div>
                 <span className="font-bold">Colors:</span>
                 <div className="flex justify-center items-center mt-2 space-x-2">
@@ -97,11 +117,11 @@ function ProductPage() {
               </div>
               <div className="mb-4">
                 <span className="font-bold text-gray-700 dark:text-gray-300">Company:</span>
-                <span className="text-gray-600 dark:text-gray-300 ml-1">Sample Company</span>
+                <span className="text-gray-600 dark:text-gray-300 ml-1">{product.company}</span>
               </div>
               <div className="mb-4">
                 <span className="font-bold text-gray-700 dark:text-gray-300">Model:</span>
-                <span className="text-gray-600 dark:text-gray-300 ml-1">Sample Model</span>
+                <span className="text-gray-600 dark:text-gray-300 ml-1">{product.model}</span>
               </div>
             </div>
           </div>
