@@ -7,14 +7,14 @@ function ProductPage() {
   const location = useLocation();
   const { id } = location.state;
 
-  const [product, setProduct] = useState(false);
-  const [error, setError] = useState(null)
+  const [product, setProduct] = useState({});
+  const [error, setError] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageScaled, setIsImageScaled] = useState(false);
 
-  const discountedPrice = 6000;
-  const discountPercentage = calculateDiscountPercentage(product.price, discountedPrice);
+  const discountedPrice = product.discountPrice || 0;
+  const discountPercentage = product.price ? calculateDiscountPercentage(product.price, discountedPrice) : 0;
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -24,7 +24,7 @@ function ProductPage() {
     setIsImageScaled(false);
     setTimeout(() => {
       setIsModalOpen(false);
-    }, 500); // הזמן צריך להתאים לאורך האנימציה של ההקטנה
+    }, 500); // Adjust the time according to the shrink animation length
   };
 
   useEffect(() => {
@@ -49,6 +49,7 @@ function ProductPage() {
       return () => clearTimeout(timer);
     }
   }, [isModalOpen]);
+  console.log(discountPercentage)
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 py-8">
@@ -62,7 +63,7 @@ function ProductPage() {
             >
               <img
                 className="w-full h-full object-cover"
-                src= {product.image_link}
+                src={product.image_link}
                 alt="Product Image"
               />
               {isHovering && (
@@ -100,9 +101,11 @@ function ProductPage() {
                 </div>
               </div>
               <div className="text-lg font-bold text-red-500 dark:text-red-400">
-                <span className="line-through text-gray-600 dark:text-gray-400">${product.price}</span>
-                <span className="ml-2">${discountedPrice.toLocaleString()}</span>
-                <span className="text-sm text-red-500 dark:text-red-400 ml-2">({discountPercentage}%)</span>
+                <span className={`${discountPercentage === '0.00' ? '' : 'line-through'} text-gray-600 dark:text-gray-400`}>${product.price}</span>
+                {discountPercentage !== '0.00' && (<>
+                  <span className="ml-2">${discountedPrice.toLocaleString()}</span>
+                  <span className="text-sm text-red-500 dark:text-red-400 ml-2">({discountPercentage}%)</span>
+                </>)}
               </div>
               <div>
                 <span className="font-bold">Image Link:</span>
@@ -140,7 +143,7 @@ function ProductPage() {
             </button>
             <img
               className="max-w-full max-h-full"
-              src="./public/pictures/car.jpg"
+              src={product.image_link} // Ensure this points to the correct image link
               alt="Product Image Full Screen"
             />
           </div>
