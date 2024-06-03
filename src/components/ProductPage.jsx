@@ -7,15 +7,14 @@ function ProductPage() {
   const location = useLocation();
   const { id } = location.state;
 
-  const originalPrice = 90000;
-  const discountedPrice = 60000;
-  const discountPercentage = calculateDiscountPercentage(originalPrice, discountedPrice);
-
   const [product, setProduct] = useState(false);
   const [error, setError] = useState(null)
   const [isHovering, setIsHovering] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageScaled, setIsImageScaled] = useState(false);
+
+  const discountedPrice = 6000;
+  const discountPercentage = calculateDiscountPercentage(product.price, discountedPrice);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -101,7 +100,7 @@ function ProductPage() {
                 </div>
               </div>
               <div className="text-lg font-bold text-red-500 dark:text-red-400">
-                <span className="line-through text-gray-600 dark:text-gray-400">${originalPrice.toLocaleString()}</span>
+                <span className="line-through text-gray-600 dark:text-gray-400">${product.price}</span>
                 <span className="ml-2">${discountedPrice.toLocaleString()}</span>
                 <span className="text-sm text-red-500 dark:text-red-400 ml-2">({discountPercentage}%)</span>
               </div>
