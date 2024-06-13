@@ -3,9 +3,20 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-  ],  theme: {
+  ],
+  darkMode: 'class', // או 'media'
+  theme: {
     extend: {},
   },
-  plugins: [],
+  
+  plugins: [
+    require('daisyui'),
+  ],
+  daisyui: {
+    themes: [
+      'light', // התמה המובנית
+      'dark', // התמה המובנית
+     
+    ],
+  },
 }
-
