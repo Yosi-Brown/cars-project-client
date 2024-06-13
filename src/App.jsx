@@ -6,18 +6,20 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
-import ProductCard from "./components/ProductCard";
+import Products from "./components/Products";
 import ProductPage from "./components/ProductPage";
 import ProductReviews from "./components/ProductReviews";
 import ProductsProvider from "./context/CartContextProduct.jsx";
 import './App.css';
+import Navbar from "./components/section/Navbar";
 
 function Root() {
   return (
-    <div>
+    <>
+      <Navbar/>
       {/* <div>NAVBAR</div> */}
       <Outlet />
-    </div>
+    </>
   );
 }
 
@@ -26,7 +28,7 @@ function App() {
     createRoutesFromElements(
       <Route path="/" element={<Root />}>
         <Route path="page" element={<ProductPage />} />
-        <Route path="card" element={<ProductCard />} />
+        <Route path="Products" element={<Products />} />
         <Route path="reviews" element={<ProductReviews />} />
       </Route>
     )

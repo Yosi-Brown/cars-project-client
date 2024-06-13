@@ -8,6 +8,8 @@ export const ProductsContext = createContext();
 const ProductsProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   useEffect(() => {
     const getProduct = async () => {
@@ -28,7 +30,7 @@ const ProductsProvider = ({ children }) => {
   }
 
   return (
-    <ProductsContext.Provider value={{ products, error, getAllProducts }}>
+    <ProductsContext.Provider value={{ products, error, getAllProducts, setIsModalOpen,isModalOpen }}>
       {children}
     </ProductsContext.Provider>
   );

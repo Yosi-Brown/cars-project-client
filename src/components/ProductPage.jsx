@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import calculateDiscountPercentage from './discountCalculator';
 import { useLocation } from 'react-router-dom';
+import { ProductsContext } from "../context/CartContextProduct.jsx";
 import axios from 'axios';
 
-function ProductPage() {
-  const location = useLocation();
-  const { id } = location.state;
+function ProductPage({product}) {
+  console.log("from product page");
+  console.log(product)
+  // const location = useLocation();
+  // const { id } = location.state;
 
-  const [product, setProduct] = useState({});
+  // const [product, setProduct] = useState({});
   const [error, setError] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isImageScaled, setIsImageScaled] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImageScaled, setIsImageScaled] = useState(true);
+  const {isModalOpen,setIsModalOpen}  = useContext(ProductsContext)
 
   const discountedPrice = product.discountPrice || 0;
   const discountPercentage = product.price ? calculateDiscountPercentage(product.price, discountedPrice) : 0;
@@ -28,18 +32,18 @@ function ProductPage() {
   };
 
   useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3000/products/get-product/${id}`);
-        setProduct(res.data.product);
-        console.log(res.data.product);
-      } catch (error) {
-        setError(error.message || 'An error occurred while fetching products.');
-        console.error(error);
-      }
-    };
+    // const getProduct = async () => {
+    //   try {
+    //     const res = await axios.get(`http://localhost:3000/products/get-product/${id}`);
+    //     setProduct(res.data.product);
+    //     console.log(res.data.product);
+    //   } catch (error) {
+    //     setError(error.message || 'An error occurred while fetching products.');
+    //     console.error(error);
+    //   }
+    // };
 
-    getProduct();
+    // getProduct();
 
     if (isModalOpen) {
       // Delay the scaling effect to allow the modal to render
@@ -50,6 +54,7 @@ function ProductPage() {
     }
   }, [isModalOpen]);
   console.log(discountPercentage)
+  console.log("stil");
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 py-8">
@@ -114,7 +119,7 @@ function ProductPage() {
               <div>
                 <span className="font-bold">Product Description:</span>
                 <p className="text-gray-600 dark:text-gray-300 text-sm mt-2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed ante justo. Integer euismod libero id mauris malesuada tincidunt. Vivamus commodo nulla ut lorem rhoncus aliquet. Duis dapibus augue vel ipsum pretium, et venenatis sem blandit. Quisque ut erat vitae nisi ultrices placerat non eget velit. Integer ornare mi sed ipsum lacinia, non sagittis mauris blandit. Morbi fermentum libero vel nisl suscipit, nec tincidunt mi consectetur.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed ante justo. Integer euismod libero id mauris malesuada tincidunt. Vivamus commodo nulla ut lorem rhoncus aliquet.
                 </p>
               </div>
               <div className="mb-4">
